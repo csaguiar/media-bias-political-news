@@ -1,2 +1,3 @@
-# media-bias-political-news
-Predicting Media Bias in News Articles
+# Predicting Media Bias in News Articles
+
+Add a description here.
