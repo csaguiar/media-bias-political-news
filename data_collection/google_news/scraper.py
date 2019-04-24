@@ -10,7 +10,7 @@ import csv
 DEFAULT_URL = "https://news.google.com/rss/topics/CAAqBwgKMPLc8gowgtnZAg?hl=en-US&gl=US&ceid=US:en"
 
 # Path to file where CSV data, in the format of the Kaggle/Components dataset, is saved
-CSV_PATH = "data/google_news_{}.csv".format(datetime.now().strftime("%Y-%m-%d"))
+CSV_PATH = "data/google_news_{}.csv".format(datetime.now().strftime("%Y-%m-%d_%H:%M"))
 
 
 # From: https://gist.github.com/vladignatyev/06860ec2040cb497f0f3

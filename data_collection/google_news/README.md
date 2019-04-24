@@ -5,7 +5,7 @@ Pull articles from Google News RSS from politics topics.
 1) Initialize module:
 `sg = ScrapeGoogleNews(url=<RSS URL>)`
 
-RSS URL defaults to Politics topics on Google News localized to US
+   RSS URL defaults to Politics topics on Google News localized to US
 
 2) Fetch links from RSS:
 `sg.fetch_links()`
@@ -14,7 +14,7 @@ RSS URL defaults to Politics topics on Google News localized to US
 `sg.fetch_articles()`
 
 4) Save articles
-* To CSV with columns [`title, publication, authors, date, year, month, url, content`]:
+* To a datetime labeled CSV file with columns [`title, publication, authors, date, year, month, url, content`]:
 `sg.save_articles_to_csv()`
 * Save each text to separate file:
 `sg.save_articles_to_disk()`
