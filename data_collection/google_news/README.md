@@ -13,5 +13,8 @@ RSS URL defaults to Politics topics on Google News localized to US
 3) Download articles using [newspaper](https://newspaper.readthedocs.io/en/latest/) library
 `sg.fetch_articles()`
 
-4) Save articles to disk
+4) Save articles
+* To CSV with columns [`title, publication, authors, date, year, month, url, content`]:
+`sg.save_articles_to_csv()`
+* Save each text to separate file:
 `sg.save_articles_to_disk()`
