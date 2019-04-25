@@ -62,11 +62,14 @@ class ScrapeGoogleNews:
 
         for link in self.links:
             article = Article(link)
-            article.download()
-            article.parse()
-            self.articles.append(article)
-            progress(count, total - 1, "Fetching Articles")
-            count += 1
+            try:
+                article.download()
+                article.parse()
+                self.articles.append(article)
+                progress(count, total - 1, "Fetching Articles")
+                count += 1
+            except:
+                print("Error fetching {}".format(link))
 
     def save_articles_to_csv(self):
         """Saves article text and metadata to CSV"""
