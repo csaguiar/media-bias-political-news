@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 from newspaper import Article
 from datetime import datetime
-import base64
 import requests
 import sys
 import csv
@@ -9,8 +8,10 @@ import csv
 # Default RSS URL from google news for politics topics localized to US
 DEFAULT_URL = "https://news.google.com/rss/topics/CAAqBwgKMPLc8gowgtnZAg?hl=en-US&gl=US&ceid=US:en"
 
-# Path to file where CSV data, in the format of the Kaggle/Components dataset, is saved
-CSV_PATH = "data/google_news_{}.csv".format(datetime.now().strftime("%Y-%m-%d_%H:%M"))
+# Path to file where CSV data, in the format of the
+# Kaggle/Components dataset, is saved
+CSV_PATH = "data/google_news_{}.csv" \
+                .format(datetime.now().strftime("%Y-%m-%d_%H:%M"))
 
 
 # From: https://gist.github.com/vladignatyev/06860ec2040cb497f0f3
@@ -73,7 +74,9 @@ class ScrapeGoogleNews:
 
     def save_articles_to_csv(self):
         """Saves article text and metadata to CSV"""
-        csv_data = [["title, publication, authors, date, year, month, url, content"]]
+        csv_data = [
+            ["title, publication, authors, date, year, month, url, content"]
+        ]
 
         for article in self.articles:
             if article.publish_date is not None:
@@ -99,11 +102,3 @@ class ScrapeGoogleNews:
             writer.writerows(csv_data)
 
         csv_file.close()
-
-    def save_articles_to_disk(self):
-        """Writes each article into a file with name defined by the url b64 encoded"""
-        for article in self.articles:
-            filename = base64.b64encode(article.url.encode('utf-8')).decode("utf-8")
-            f = open(filename, "w")
-            f.write(article.text)
-            f.close()

@@ -16,5 +16,3 @@ Pull articles from Google News RSS from politics topics.
 4) Save articles
 * To a datetime labeled CSV file with columns [`title, publication, authors, date, year, month, url, content`]:
 `sg.save_articles_to_csv()`
-* Save each text to separate file:
-`sg.save_articles_to_disk()`
