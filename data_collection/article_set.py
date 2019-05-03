@@ -10,7 +10,7 @@ class ArticleSet:
     """Class to handle set of articles while fetching from remote."""
 
     def _filename(self):
-        datetime_now = datetime.now().strftime("%Y-%m-%d_%H:%M")
+        datetime_now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
         return "data/{}_{}.csv" \
             .format(self.base_name, datetime_now)
 
