@@ -65,5 +65,5 @@ class WebhoseScrape(ArticleSet):
 
             if i < num_pages-1:
                 print("Waiting 100 seconds. Next page {}".format(i + 2))
-                time.sleep(100)
+                time.sleep(120)
                 output = webhoseio.get_next()
