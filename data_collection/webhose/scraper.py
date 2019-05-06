@@ -19,9 +19,8 @@ class WebhoseScrape(ArticleSet):
         self.token = kwargs.get("token")
         self.articles = []
 
-    def _get_params(self, domain):
+    def _build_query(self, domain, only_politics):
         queries = [
-            "site_category:politics",
             "thread.country:US",
             "language:english",
             "site_type:news"
@@ -29,6 +28,13 @@ class WebhoseScrape(ArticleSet):
         if domain is not None:
             queries.append("site:" + domain)
 
+        if only_politics:
+            queries.append("site_category:politics")
+
+        return queries
+
+    def _get_params(self, domain, only_politics):
+        queries = self._build_query(domain, only_politics)
         time_30_days = datetime.now() + timedelta(-30)
 
         return {
@@ -40,11 +46,24 @@ class WebhoseScrape(ArticleSet):
     def _reset_news(self):
         self.articles = []
 
-    def fetch_articles(self, domain=None, num_pages=1):
-        """Uses newspaper library to download and parse the article"""
+    def fetch_articles(self, *args, **kwargs):
+        """Uses Webhose IO to fetch articles
+
+        Args:
+            **kwargs: - domain: Source Domain
+                      - num_pages: Number of pages to fetch
+                      - waiting_time: Waiting time between requests
+                      - only_politics: Returns only politics articles
+                        (Defaults to True)
+        """
+        domain = kwargs.get("domain")
+        num_pages = kwargs.get("num_pages", 1)
+        waiting_time = kwargs.get("waiting_time", 100)
+        only_politics = kwargs.get("only_politics", True)
         webhoseio.config(token=self.token)
         self._reset_news()
-        output = webhoseio.query("filterWebContent", self._get_params(domain))
+        params = self._get_params(domain, only_politics)
+        output = webhoseio.query("filterWebContent", params)
         for i in range(0, num_pages):
             for post in output["posts"]:
                 publish_date = parse(post["thread"]["published"])
@@ -64,6 +83,7 @@ class WebhoseScrape(ArticleSet):
                 self._reset_news()
 
             if i < num_pages-1:
-                print("Waiting 100 seconds. Next page {}".format(i + 2))
-                time.sleep(120)
+                message = "Waiting {} seconds. Next page {}"
+                print(message.format(waiting_time, i + 2))
+                time.sleep(waiting_time)
                 output = webhoseio.get_next()
