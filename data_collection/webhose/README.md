@@ -8,6 +8,7 @@ Pull articles using Webhose API and save them to a CSV file.
 Set up the API module to fetch new articles. The API token can be obtained from [webhose.io](https://webhose.io/)
 
 2) Download articles from `filterWebContent` endpoint.
+
 `sg.fetch_articles(domain=None, num_pages=1, waiting_time=100, only_politics=True)`
 
 Optional parameters:

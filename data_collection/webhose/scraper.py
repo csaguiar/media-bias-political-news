@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 from dateutil.parser import parse
 from data_collection.article_set import ArticleSet
 
+MAX_PER_REQUEST = 100
+
 
 class AttrDict(dict):
     """Class to access dictionary keys as attributtes"""
@@ -15,7 +17,7 @@ class AttrDict(dict):
 class WebhoseScrape(ArticleSet):
     """Use Webhose.io API to collect political news from U.S."""
     def __init__(self, *args, **kwargs):
-        self.base_name = "webhose"
+        self.base_name = kwargs.get("base_name", "webhose")
         self.token = kwargs.get("token")
         self.articles = []
 
@@ -64,6 +66,7 @@ class WebhoseScrape(ArticleSet):
         self._reset_news()
         params = self._get_params(domain, only_politics)
         output = webhoseio.query("filterWebContent", params)
+        fetched_articles_count = 0
         for i in range(0, num_pages):
             for post in output["posts"]:
                 publish_date = parse(post["thread"]["published"])
@@ -80,10 +83,13 @@ class WebhoseScrape(ArticleSet):
             if num_pages > 1:
                 print("Saving page {}".format(i + 1))
                 self.save_articles_to_csv()
+                fetched_articles_count = len(self.articles)
                 self._reset_news()
 
-            if i < num_pages-1:
+            if i < num_pages-1 and fetched_articles_count == MAX_PER_REQUEST:
                 message = "Waiting {} seconds. Next page {}"
                 print(message.format(waiting_time, i + 2))
                 time.sleep(waiting_time)
                 output = webhoseio.get_next()
+            elif i < num_pages-1:
+                break
