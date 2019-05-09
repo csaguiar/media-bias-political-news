@@ -11,10 +11,11 @@ This project is intended to use Natural Language Processing and Deep Learning to
 - [All The News](https://components.one/datasets/all-the-news-articles-dataset/) dataset: 204,135 articles from 18 American publications, a subset of which was used in a Kaggle competition.
 
 # News Outlets
+(Listed in order of factual ranking based on MediaBiasChart.com)
 
-*Liberal bias label: (in order of factual ranking based on MediaBiasChart.com)* The New York Times, The Washington Post, Politico, The Guardian, The New Yorker, The Atlantic, Slate, The Daily Beast, Vanity Fair, Mother Jones, NBC, CNN
+**Liberal bias label:** The New York Times, The Washington Post, Politico, The Guardian, The New Yorker, The Atlantic, Slate, The Daily Beast, Vanity Fair, Mother Jones, NBC, CNN
 
-*Conservative bias label: (in order of factual ranking based on MediaBiasChart.com)* National Review, The Weekly Standard, Reason, Washington Examiner, The Washington Times, The American Conservative, The Federalist, New York Post, Daily Mail, Fox News
+**Conservative bias label:** National Review, The Weekly Standard, Reason, Washington Examiner, The Washington Times, The American Conservative, The Federalist, New York Post, Daily Mail, Fox News
 
 # To do:
 
