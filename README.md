@@ -14,8 +14,7 @@ This project is intended to use Natural Language Processing and Deep Learning to
 
 *Liberal bias label:* The New Yorker, Mother Jones, The Daily Beast, Slate, Vanity Fair, CNN, The Washington Post, The Guardian, The New York Times, Politico, The Atlantic, NBC
 
-*Conservative bias label:* Fox News, National Review, The Washington Times, Reason, The Federalist, New York Post, Daily Mail, Washington Examiner
-
+*Conservative bias label:* National Review, The Weekly Standard, Reason, Washington Examiner, The Washington Times, The American Conservative, The Federalist, New York Post, Daily Mail, Fox News
 
 # To do:
 
