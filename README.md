@@ -1,6 +1,6 @@
 # Predicting Political Bias in News Articles
 
-This project is intended to use Natural Language Processing and Deep Learning to predict media bias. The project is currently in the stage of data collection using the following sources of data:
+This project uses Natural Language Processing and deep learning approaches to predict political bias by media outlets based on news article texts. The project is currently in the stage of data collection using the following sources of data:
 
 - Google News RSS (Politics category): This method uses [Beautiful Soup](https://launchpad.net/beautifulsoup) to parse the RSS in order to collect news urls. These urls are then parsed using [newspaper](https://newspaper.readthedocs.io/en/latest/) library.
 
