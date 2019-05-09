@@ -8,6 +8,8 @@ This project is intended to use Natural Language Processing and Deep Learning to
 
 - Webhose.IO (Predetermined domains): Use predetermined domains based on the [Media Bias Chart](https://www.adfontesmedia.com/) dataset.
 
+- [All The News](https://components.one/datasets/all-the-news-articles-dataset/) dataset: 204,135 articles from 18 American publications, a subset of which was used in a Kaggle competition.
+
 
 # To do:
 
