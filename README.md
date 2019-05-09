@@ -13,20 +13,23 @@ This project uses Natural Language Processing and deep learning approaches to pr
 # News Outlets
 
 ### Predicting liberal vs. conservative bias
-(Listed in order of factual ranking based on MediaBiasChart.com)
+(Listed in order of factual ranking based on MediaBiasFactCheck.com)
 
-**Liberal bias label:** NBC News, The New York Times, The Washington Post, Politico, The Guardian, The New Yorker, The Atlantic, Slate, The Daily Beast, Vanity Fair, Mother Jones, MSNBC, CNN (Online News)
+**Liberal bias label:** NBC News, The New York Times, The Washington Post, The Guardian, The New Yorker, The Atlantic, Slate, The Daily Beast, Vanity Fair, Mother Jones, MSNBC, CNN (Online News)
 
 **Conservative bias label:** National Review, The Weekly Standard, Reason, Washington Examiner, The Washington Times, The American Conservative, The Federalist, New York Post, Daily Mail, Fox News
 
 ### Predicting degree of bias
-Source classification was based on triangulation between MediaBiasFactCheck and AllSides Bias Rating. Sources where AllSides "Community Feedback" is either "somewhat agree" or "agree" are starred.
+Source classification was based on triangulation between the AllSides Bias Rating and MediaBiasFactCheck.com.
+\* means that both AllSides Bias Rating and MediaBiasFactCheck.com both concur on category membership.
++ means the AllSides "Community Feedback" was either "somewhat agree" or "agree".
+Any source classified as a "Questionable Source" (e.g., Breitbart) by MediaBiasFactCheck.com was excluded.
 
-**Central:** Associated Press (AP)\*, Reuters\*, NPR (Online News)\*, BBC\*, The Hill, The Christian Science Monitor, Bloomberg, Al Jazeera, Wall Street Journal (Online News)
+**Central:** Associated Press (AP)\*+, Reuters\*+, The Christian Science Monitor\*, FiveThirtyEight+, BBC News+, Forbes+, USA Today+
 
-**Biased Level 1:** The Atlantic\*, The Guardian\*, The Washington Post\*, Reason\*, Washington Examiner\*, The Washington Times\*, Fox News, CNN (Online News), NBC News, The New York Times, Politico
+**Biased Level 1:** The Atlantic\*+, The Guardian\*+, The Washington Post\*+, Reason\*+, The Washington Times\*+, NBC News\*, The New York Times\*, Washington Examiner+
 
-**Biased Level 2:** Mother Jones\*, MSNBC\*, The New Yorker\*, Slate\*, Democracy Now!\*, The Daily Beast\*, The Federalist\*, Breitbart\*, The Blaze\*, The Daily Caller\*, Daily Mail\*, The Daily Wire\*, National Review\*
+**Biased Level 2:** The New Yorker\*+, CNN\*, Mother Jones\*+, MSNBC\*+, Slate\*+, Democracy Now!\*+, Daily Beast\*+, The Federalist\*+, The Blaze\*+, The Daily Caller\*+, The Daily Wire\*+, National Review\*+, Daily Mail+
 
 
 # To do:
