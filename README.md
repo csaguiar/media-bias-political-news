@@ -12,9 +12,9 @@ This project is intended to use Natural Language Processing and Deep Learning to
 
 # News Outlets
 
-*Liberal bias label:* The New Yorker, Mother Jones, The Daily Beast, Slate, Vanity Fair, CNN, The Washington Post, The Guardian, The New York Times, Politico, The Atlantic, NBC
+*Liberal bias label: (in order of factual ranking based on MediaBiasChart.com)* The New York Times, The Washington Post, Politico, The Guardian, The New Yorker, The Atlantic, Slate, The Daily Beast, Vanity Fair, Mother Jones, NBC, CNN
 
-*Conservative bias label:* National Review, The Weekly Standard, Reason, Washington Examiner, The Washington Times, The American Conservative, The Federalist, New York Post, Daily Mail, Fox News
+*Conservative bias label: (in order of factual ranking based on MediaBiasChart.com)* National Review, The Weekly Standard, Reason, Washington Examiner, The Washington Times, The American Conservative, The Federalist, New York Post, Daily Mail, Fox News
 
 # To do:
 
