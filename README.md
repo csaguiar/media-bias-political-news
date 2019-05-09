@@ -12,8 +12,8 @@ This project uses Natural Language Processing and deep learning approaches to pr
 
 # News Outlets
 Classification was based on triangulation between the AllSides Bias Rating and MediaBiasFactCheck.com.
-\* means that both AllSides Bias Rating and MediaBiasFactCheck.com both concur on category membership.
-+ means the AllSides "Community Feedback" was either "somewhat agree" or "agree".
+A \* means that both AllSides Bias Rating and MediaBiasFactCheck.com both concur on category membership.
+A + means the AllSides "Community Feedback" was either "somewhat agree" or "agree".
 Any source classified as a "Questionable Source" (e.g., Breitbart) by MediaBiasFactCheck.com was excluded.
 
 ### Predicting liberal vs. conservative bias
