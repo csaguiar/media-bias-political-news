@@ -18,7 +18,7 @@ Any source classified as a "Questionable Source" (e.g., Breitbart) by MediaBiasF
 
 ### Predicting liberal vs. conservative bias
 
-**Liberal bias label:** The New Yorker\*+, CNN\*, Mother Jones\*+, MSNBC\*+, Slate\*+, The Atlantic\*+, The Guardian\*+, The Washington Post\*+, NBC News\*, The New York Times\*
+**Liberal bias label:** The New Yorker\*+, Mother Jones\*+, MSNBC\*+, Slate\*+, The Atlantic\*+, The Guardian\*+, The Washington Post\*+, The New York Times\*, CNN\*, NBC News\*
 
 **Conservative bias label:** Reason\*+, The Washington Times\*+, National Review\*+, Washington Examiner+, The Federalist\*+, Fox News\*, New York Post\*+, The Blaze\*+, The Daily Caller\*+, The Daily Wire\*+
 
