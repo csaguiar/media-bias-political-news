@@ -24,7 +24,7 @@ Source classification was based on triangulation between MediaBiasFactCheck and 
 
 **Central:** Associated Press (AP)\*, Reuters\*, NPR (Online News)\*, BBC\*, The Hill, The Christian Science Monitor, Bloomberg, Al Jazeera, Wall Street Journal (Online News)
 
-**Biased Level 1:** The Atlantic\*, The Guardian\*, Time Magazine\*, The Washington Post\*, Reason\*, Washington Examiner\*, The Washington Times\*, Fox News, CNN (Online News), NBC News, The New York Times (News), Politico
+**Biased Level 1:** The Atlantic\*, The Guardian\*, The Washington Post\*, Reason\*, Washington Examiner\*, The Washington Times\*, Fox News, CNN (Online News), NBC News, The New York Times, Politico
 
 **Biased Level 2:** Mother Jones\*, MSNBC\*, The New Yorker\*, Slate\*, Democracy Now!\*, The Daily Beast\*, The Federalist\*, Breitbart\*, The Blaze\*, The Daily Caller\*, Daily Mail\*, The Daily Wire\*, National Review\*
 
