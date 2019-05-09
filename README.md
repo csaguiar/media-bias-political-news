@@ -11,19 +11,18 @@ This project uses Natural Language Processing and deep learning approaches to pr
 - [All The News](https://components.one/datasets/all-the-news-articles-dataset/) dataset: 204,135 articles from 18 American publications, a subset of which was used in a Kaggle competition.
 
 # News Outlets
-
-### Predicting liberal vs. conservative bias
-(Listed in order of factual ranking based on MediaBiasFactCheck.com)
-
-**Liberal bias label:** NBC News, The New York Times, The Washington Post, The Guardian, The New Yorker, The Atlantic, Slate, The Daily Beast, Vanity Fair, Mother Jones, MSNBC, CNN (Online News)
-
-**Conservative bias label:** National Review, The Weekly Standard, Reason, Washington Examiner, The Washington Times, The American Conservative, The Federalist, New York Post, Daily Mail, Fox News
-
-### Predicting degree of bias
-Source classification was based on triangulation between the AllSides Bias Rating and MediaBiasFactCheck.com.
+Classification was based on triangulation between the AllSides Bias Rating and MediaBiasFactCheck.com.
 \* means that both AllSides Bias Rating and MediaBiasFactCheck.com both concur on category membership.
 + means the AllSides "Community Feedback" was either "somewhat agree" or "agree".
 Any source classified as a "Questionable Source" (e.g., Breitbart) by MediaBiasFactCheck.com was excluded.
+
+### Predicting liberal vs. conservative bias
+
+**Liberal bias label:** The New Yorker\*+, CNN\*, Mother Jones\*+, MSNBC\*+, Slate\*+, The Atlantic\*+, The Guardian\*+, The Washington Post\*+, NBC News\*, The New York Times\*
+
+**Conservative bias label:** Reason\*+, The Washington Times\*+, National Review\*+, Washington Examiner+, The Federalist\*+, Fox News\*, New York Post\*+, The Blaze\*+, The Daily Caller\*+, The Daily Wire\*+
+
+### Predicting degree of bias
 
 **Central:** Associated Press (AP)\*+, Reuters\*+, The Christian Science Monitor\*, FiveThirtyEight+, BBC News+, Forbes+, USA Today+
 
