@@ -43,5 +43,5 @@ def concat_files(directory_list, unique_column="url"):
 
 
 if __name__ == '__main__':
-    dataset = concat_files(["../GoogleNews", "../Webhose"])
-    dataset.to_csv("news_articles_joined")
+    dataset = concat_files(["../google_news", "../Webhose"])
+    dataset.to_csv("news_articles_joined.csv")
