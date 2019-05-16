@@ -30,7 +30,15 @@ Any source classified as a "Questionable Source" (e.g., Breitbart) by MediaBiasF
 
 **Conservative bias label:** Reason\*+, The Washington Times\*+, National Review\*+, Washington Examiner+, The Federalist\*+, Fox News\*, New York Post\*+, The Blaze\*+, The Daily Caller\*+, The Daily Wire\*+
 
-# To do:
+# Project Folder Structure
+
+- `data`: Contains the data collected from the various sources.
+
+- `data_collection`: Contains the modules built for collecting data, including `ArticleSet`. Also includes the classes for scraping Google News website and [Webhose.IO](https://webhose.io) API. More info [here](data_collection/README.md)
+
+- `notebooks`: Collection of Jupyter Notebooks used for data exploration.
+
+# To do
 
 - Data Cleaning for the most relevant news outlets
 
