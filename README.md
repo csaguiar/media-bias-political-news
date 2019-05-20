@@ -32,11 +32,15 @@ Any source classified as a "Questionable Source" (e.g., Breitbart) by MediaBiasF
 
 # Project Folder Structure
 
-- `data`: Contains the data collected from the various sources.
-
 - `data_collection`: Contains the modules built for collecting data, including `ArticleSet`. Also includes the classes for scraping Google News website and [Webhose.IO](https://webhose.io) API. More info [here](data_collection/README.md)
 
+- `data_processed`: Contains the data pre processed after cleaning.
+
+- `data_raw`: Contains the data collected from the various sources.
+
 - `notebooks`: Collection of Jupyter Notebooks used for data exploration.
+
+- `preprocessing`: scripts to pre process data collection.
 
 # To do
 
