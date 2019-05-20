@@ -1,6 +1,12 @@
 """Join csv files into only one with unique urls"""
 import os
 import pandas as pd
+from urllib.parse import urlparse
+
+
+def parse_url(url):
+    url_obj = urlparse(url)
+    return "{}://{}{}".format(url_obj.scheme, url_obj.netloc, url_obj.path)
 
 
 def list_csv_files(path):
@@ -34,6 +40,7 @@ def concat_files(directory_list, unique_column="url"):
             filename_with_path = os.path.join(directory, filename)
             this_data = pd.read_csv(filename_with_path)
             this_data.columns = [c.strip() for c in this_data.columns]
+            this_data["url"] = this_data["url"].apply(parse_url)
             if data is None:
                 data = this_data
             else:
