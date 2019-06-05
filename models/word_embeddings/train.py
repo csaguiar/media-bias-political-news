@@ -27,13 +27,13 @@ class Input:
     def read_data(self):
         with open(self.filename) as csvfile:
             data = csv.DictReader(csvfile)
-            text_corpus = ""
+            text_corpus = []
             for row in data:
                 if (self.select_label is None or
                         row["label"] == self.select_label):
-                    text_corpus += " " + row["content"]
+                    text_corpus.append(row["content"].split())
 
-        self.text_corpus = text_corpus.split()
+        self.text_corpus = text_corpus
 
         return self.text_corpus
 
@@ -41,19 +41,22 @@ class Input:
         """Process raw inputs into a dataset."""
         count = [['UNK', -1]]
         count.extend(
-            collections.Counter(self.text_corpus).most_common(n_words - 1))
+            collections.Counter(x for document in self.text_corpus for x in document).most_common(n_words - 1))
+
         dictionary = dict()
         for word, _ in count:
             dictionary[word] = len(dictionary)
         data = list()
         unk_count = 0
-        for word in self.text_corpus:
-            if word in dictionary:
-                index = dictionary[word]
-            else:
-                index = 0  # dictionary['UNK']
-                unk_count += 1
-            data.append(index)
+        for sentence in self.text_corpus:
+            for word in sentence:
+                if word in dictionary:
+                    index = dictionary[word]
+                else:
+                    index = 0  # dictionary['UNK']
+                    unk_count += 1
+                data.append(index)
+
         count[0][1] = unk_count
         reversed_dictionary = dict(
             zip(dictionary.values(), dictionary.keys()))
@@ -71,8 +74,6 @@ class Model:
     """docstring for Model."""
     def _default_params(self):
         return {
-            "valid_size": 16,
-            "valid_window": 100,
             "num_sampled": 64,
             "batch_size": 128,
             "embedding_size": 128,
@@ -82,17 +83,11 @@ class Model:
         }
 
 
-
     def __init__(self, *args, **kwargs):
         self.data_index = 0
         self.input = args[0]
-
-        self.params = {**kwargs, **self._default_params()}
-        valid_window = self.params["valid_window"]
-        valid_size = self.params["valid_size"]
-        self.params["valid_examples"] = np.random.choice(valid_window, valid_size, replace=False)
+        self.params = {**self._default_params(), **kwargs}
         self.final_embeddings = None
-
 
     def generate_batch(self):
         batch_size = self.params.get("batch_size")
@@ -133,16 +128,15 @@ class Model:
     def train(self):
         graph = tf.Graph()
         batch_size = self.params.get("batch_size")
-        valid_examples = self.params.get("valid_examples")
         num_sampled = self.params.get("num_sampled")
         embedding_size = self.params.get("embedding_size")
         num_steps = self.params.get("num_steps")
         vocabulary_size = self.input.vocabulary_size
 
+        # Building the Graph
         with graph.as_default():
             train_inputs = tf.placeholder(tf.int32, shape=[batch_size])
             train_labels = tf.placeholder(tf.int32, shape=[batch_size, 1])
-            valid_dataset = tf.constant(valid_examples, dtype=tf.int32)
 
             embeddings = tf.Variable(
                 tf.random_uniform([vocabulary_size, embedding_size], -1.0, 1.0))
@@ -167,14 +161,6 @@ class Model:
 
             # Construct the SGD optimizer using a learning rate of 1.0.
             optimizer = tf.train.GradientDescentOptimizer(1.0).minimize(loss)
-
-            # Compute the cosine similarity between minibatch examples and all embeddings.
-            norm = tf.sqrt(tf.reduce_sum(tf.square(embeddings), 1, keepdims=True))
-            normalized_embeddings = embeddings / norm
-            valid_embeddings = tf.nn.embedding_lookup(
-              normalized_embeddings, valid_dataset)
-            similarity = tf.matmul(
-              valid_embeddings, normalized_embeddings, transpose_b=True)
 
             # Add variable initializer.
             init = tf.global_variables_initializer()
