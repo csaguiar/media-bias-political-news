@@ -5,6 +5,7 @@ import random
 import tensorflow as tf
 import math
 import pickle
+import sys
 
 
 def save_variable_to_pickle(data, filename):
@@ -17,6 +18,7 @@ class Input:
     def __init__(self, *args, **kwargs):
         self.filename = args[0]
         self.select_label = kwargs.get("select_label")
+        self.output_name = kwargs.get("output_name", "untitled")
         self.text_corpus = None
         self.data = None
         self.count = None
@@ -69,11 +71,20 @@ class Input:
 
         return data, count, dictionary, reversed_dictionary
 
+    def save_to_file(self):
+        data = {
+            "dictionary": self.dictionary,
+            "reversed_dictionary": self.reversed_dictionary
+        }
+        save_variable_to_pickle(data, "{}_input.pickle".format(self.output_name))
+
 
 class Model:
     """docstring for Model."""
     def _default_params(self):
         return {
+            "valid_size": 16,
+            "valid_window": 100,
             "num_sampled": 64,
             "batch_size": 128,
             "embedding_size": 128,
@@ -87,6 +98,10 @@ class Model:
         self.data_index = 0
         self.input = args[0]
         self.params = {**self._default_params(), **kwargs}
+        valid_window = self.params["valid_window"]
+        valid_size = self.params["valid_size"]
+        self.params["valid_examples"] = np.random.choice(valid_window, valid_size, replace=False)
+        self.output_name = kwargs.get("output_name", "untitled")
         self.final_embeddings = None
 
     def generate_batch(self):
@@ -128,6 +143,7 @@ class Model:
     def train(self):
         graph = tf.Graph()
         batch_size = self.params.get("batch_size")
+        valid_examples = self.params.get("valid_examples")
         num_sampled = self.params.get("num_sampled")
         embedding_size = self.params.get("embedding_size")
         num_steps = self.params.get("num_steps")
@@ -137,6 +153,7 @@ class Model:
         with graph.as_default():
             train_inputs = tf.placeholder(tf.int32, shape=[batch_size])
             train_labels = tf.placeholder(tf.int32, shape=[batch_size, 1])
+            valid_dataset = tf.constant(valid_examples, dtype=tf.int32)
 
             embeddings = tf.Variable(
                 tf.random_uniform([vocabulary_size, embedding_size], -1.0, 1.0))
@@ -161,6 +178,14 @@ class Model:
 
             # Construct the SGD optimizer using a learning rate of 1.0.
             optimizer = tf.train.GradientDescentOptimizer(1.0).minimize(loss)
+
+            # Compute the cosine similarity between minibatch examples and all embeddings.
+            norm = tf.sqrt(tf.reduce_sum(tf.square(embeddings), 1, keepdims=True))
+            normalized_embeddings = embeddings / norm
+            valid_embeddings = tf.nn.embedding_lookup(
+              normalized_embeddings, valid_dataset)
+            similarity = tf.matmul(
+              valid_embeddings, normalized_embeddings, transpose_b=True)
 
             # Add variable initializer.
             init = tf.global_variables_initializer()
@@ -190,14 +215,28 @@ class Model:
 
             self.final_embeddings = normalized_embeddings.eval()
 
+    def save_to_file(self):
+        save_variable_to_pickle(
+            self.final_embeddings,
+            "{}_embeddings.pickle".format(self.output_name)
+        )
+
 
 if __name__ == '__main__':
-    input = Input("../../data_processed/dataset_with_bias_label.csv")
+    select_label = None
+    for i, arg in enumerate(sys.argv):
+        if arg == "--dataset":
+            dataset_file = sys.argv[i+1]
+        elif arg == "--output":
+            output_name = sys.argv[i+1]
+        elif arg == "--select":
+            select_label = sys.argv[i+1]
+
+    input = Input(dataset_file, output_name=output_name, select_label=select_label)
     input.read_data()
     input.build_dataset(10000)
+    input.save_to_file()
 
-    model = Model(input)
+    model = Model(input, output_name=output_name)
     model.train()
-
-    save_variable_to_pickle(input,  "input.pickle")
-    save_variable_to_pickle(model,  "model.pickle")
+    model.save_to_file()
