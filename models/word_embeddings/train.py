@@ -215,11 +215,13 @@ class Model:
 
             self.final_embeddings = normalized_embeddings.eval()
 
-    def save_to_file(self):
-        save_variable_to_pickle(
-            self.final_embeddings,
-            "{}_embeddings.pickle".format(self.output_name)
-        )
+    def export_embeddings_vocab(self):
+        data = {
+            "dictionary": self.input.dictionary,
+            "reversed_dictionary": self.input.reversed_dictionary,
+            "embeddings": self.final_embeddings
+        }
+        save_variable_to_pickle(data, "{}_embedding_vocab.pickle".format(self.output_name))
 
 
 if __name__ == '__main__':
@@ -235,8 +237,7 @@ if __name__ == '__main__':
     input = Input(dataset_file, output_name=output_name, select_label=select_label)
     input.read_data()
     input.build_dataset(10000)
-    input.save_to_file()
 
     model = Model(input, output_name=output_name)
     model.train()
-    model.save_to_file()
+    model.export_embeddings_vocab()
