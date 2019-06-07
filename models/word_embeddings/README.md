@@ -23,6 +23,9 @@ This version uses an embedding size of 128, vocabulary size of 10000 words, skip
 
 `--select <label>`: Label to be used in the training, using the column `label` of the CSV file
 
+`--num-words <number of words>`: Number of words to consider in the vocabulary
+
+
 ```
-python train.py --dataset <file name> --output <base name> [--select <label>]
+python train.py --dataset <file name> --output <base name> [--select <label> --num-words <num_words>]
 ```

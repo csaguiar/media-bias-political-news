@@ -226,6 +226,7 @@ class Model:
 
 if __name__ == '__main__':
     select_label = None
+    num_words = 10000
     for i, arg in enumerate(sys.argv):
         if arg == "--dataset":
             dataset_file = sys.argv[i+1]
@@ -233,10 +234,12 @@ if __name__ == '__main__':
             output_name = sys.argv[i+1]
         elif arg == "--select":
             select_label = sys.argv[i+1]
+        elif arg == "--num-words":
+            num_words = int(sys.argv[i+1])
 
     input = Input(dataset_file, output_name=output_name, select_label=select_label)
     input.read_data()
-    input.build_dataset(10000)
+    input.build_dataset(num_words)
 
     model = Model(input, output_name=output_name)
     model.train()
