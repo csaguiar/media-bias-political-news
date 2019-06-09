@@ -13,8 +13,9 @@ def save_variable_to_pickle(data, filename):
     pickle.dump(data, handle)
     handle.close()
 
+
 class Input:
-    """docstring for Input."""
+    """Takes a CSV of texts ('content') with labels ('label') and builds it into a dataset for training word vectors."""
     def __init__(self, *args, **kwargs):
         self.filename = args[0]
         self.select_label = kwargs.get("select_label")
@@ -40,7 +41,7 @@ class Input:
         return self.text_corpus
 
     def build_dataset(self, n_words):
-        """Process raw inputs into a dataset."""
+        """Process raw text input into a dataset."""
         count = [['UNK', -1]]
         count.extend(
             collections.Counter(x for document in self.text_corpus for x in document).most_common(n_words - 1))
@@ -80,7 +81,7 @@ class Input:
 
 
 class Model:
-    """docstring for Model."""
+    """Takes a prepared dataset and trains word embeddings on them."""
     def _default_params(self):
         return {
             "valid_size": 16,
@@ -92,7 +93,6 @@ class Model:
             "num_skips": 2,
             "num_steps": 100001
         }
-
 
     def __init__(self, *args, **kwargs):
         self.data_index = 0
@@ -113,7 +113,7 @@ class Model:
         assert num_skips <= 2 * skip_window
         vocabulary = self.input.data
 
-        batch = np.ndarray(shape=(batch_size), dtype=np.int32)
+        batch = np.ndarray(shape=batch_size, dtype=np.int32)
         context = np.ndarray(shape=(batch_size, 1), dtype=np.int32)
         span = 2 * skip_window + 1  # [ skip_window input_word skip_window ]
         buffer = collections.deque(maxlen=span)
