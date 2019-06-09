@@ -1,4 +1,4 @@
-# Train word embeddings
+# Custom trained word embeddings
 
 Implementation of word2vec training of word embeddings using Tensorflow, based on https://www.tensorflow.org/tutorials/representation/word2vec.
 
