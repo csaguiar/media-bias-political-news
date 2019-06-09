@@ -1,6 +1,8 @@
-# Script to train word embeddings
+# Train word embeddings
 
-This folder contains the final embeddings for training in 6 different datasets:
+Implementation of word2vec training of word embeddings using Tensorflow, based on https://www.tensorflow.org/tutorials/representation/word2vec.
+
+This folder also contains the final embeddings for training in 6 different datasets:
 
 - `wb_gn_full`: Webhose and Google News with all articles
 - `wb_gn_conservative`: Webhose and Google News with only conservative sources
@@ -21,7 +23,7 @@ This version uses an embedding size of 128, vocabulary size of 10000 words, skip
 
 **Optional argument**:
 
-`--select <label>`: Label to be used in the training, using the column `label` of the CSV file
+`--select <label>`: Labels of texts to be included in the training, based on the column `label` of the CSV file
 
 `--num-words <number of words>`: Number of words to consider in the vocabulary
 
