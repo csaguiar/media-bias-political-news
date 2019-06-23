@@ -32,20 +32,16 @@ Any source classified as a "Questionable Source" (e.g., Breitbart) by MediaBiasF
 
 # Project Folder Structure
 
+- `background`: Background materials supporting the first-pass labeling of articles based on media source.
+
 - `data_collection`: Contains the modules built for collecting data, including `ArticleSet`. Also includes the classes for scraping Google News website and [Webhose.IO](https://webhose.io) API. More info [here](data_collection/README.md)
 
-- `data_processed`: Contains the data pre processed after cleaning.
+- `data_processed`: Data pre-processed to various stages (cleaned, learned embeddings).
 
-- `data_raw`: Contains the data collected from the various sources.
+- `data_raw`: All the raw data, collected from the various sources.
 
-- `notebooks`: Collection of Jupyter Notebooks used for data exploration.
+- `preprocessing`: Code to preprocess the raw data. Outputs are saved to `data_processed/`.
 
-- `preprocessing`: scripts to pre process data collection.
+- `word_embeddings`: Code to train word embeddings using `word2vec`, visualize them using tSNE, and do exploratory analysis of the learned embeddings. Also contains the tsne plots.
 
-# To do
-
-- Data Cleaning for the most relevant news outlets
-
-- Web based tool for article labelling
-
-- First pass on the Machine Learning model architecture
+- `classification`: Models that take the word embeddings as inputs and classify each article as liberal or conservative.
