@@ -3,7 +3,7 @@ from datetime import datetime
 
 # Path to file where CSV data, in the format of the
 # Kaggle/Components dataset, is saved
-BASE_CSV_PATH = "data/{}_{}.csv"
+BASE_CSV_PATH = "data_raw"
 
 
 class ArticleSet:
@@ -11,8 +11,8 @@ class ArticleSet:
 
     def _filename(self):
         datetime_now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-        return "data/{}_{}.csv" \
-            .format(self.base_name, datetime_now)
+        return "{}/{}_{}.csv" \
+            .format(BASE_CSV_PATH, self.base_name, datetime_now)
 
     def save_articles_to_csv(self):
         """Saves article text and metadata to CSV"""
