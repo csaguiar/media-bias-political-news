@@ -6,6 +6,9 @@ import tensorflow as tf
 import math
 import pickle
 import sys
+import nltk
+nltk.download('stopwords')
+STOPWORDS = nltk.corpus.stopwords.words('english')
 
 
 def save_variable_to_pickle(data, filename):
@@ -91,7 +94,8 @@ class Model:
             "embedding_size": 128,
             "skip_window": 1,
             "num_skips": 2,
-            "num_steps": 100001
+            "num_steps": 100001,
+            "skip_stopwords": True
         }
 
     def __init__(self, *args, **kwargs):
@@ -108,6 +112,7 @@ class Model:
         batch_size = self.params.get("batch_size")
         num_skips = self.params.get("num_skips")
         skip_window = self.params.get("skip_window")
+        skip_stopwords = self.params.get("skip_stopwords")
 
         assert batch_size % num_skips == 0
         assert num_skips <= 2 * skip_window
@@ -122,22 +127,30 @@ class Model:
             buffer.append(vocabulary[self.data_index])
             self.data_index = (self.data_index + 1) % len(vocabulary)
 
-        for i in range(batch_size // num_skips):
+        count = 0
+        while count < batch_size // num_skips:
             target = skip_window  # input word at the center of the buffer
+            word = self.input.reversed_dictionary[buffer[target]]
             targets_to_avoid = [skip_window]
-            for j in range(num_skips):
-                while target in targets_to_avoid:
-                    target = random.randint(0, span - 1)
-                targets_to_avoid.append(target)
-                # this is the input word
-                batch[i * num_skips + j] = buffer[skip_window]
-                # these are the context words
-                context[i * num_skips + j, 0] = buffer[target]
+            skip_word = (word in STOPWORDS) if skip_stopwords else False
+            if not skip_word:
+                for j in range(num_skips):
+                    while target in targets_to_avoid:
+                        target = random.randint(0, span - 1)
+                    targets_to_avoid.append(target)
+                    # this is the input word
+                    batch[count * num_skips + j] = buffer[skip_window]
+                    # these are the context words
+                    context[count * num_skips + j, 0] = buffer[target]
+                count += 1
+
             buffer.append(vocabulary[self.data_index])
             self.data_index = (self.data_index + 1) % len(vocabulary)
+
         # Backtrack a little bit to avoid skipping words in the end of a batch
         self.data_index = (self.data_index + len(vocabulary) - span) % \
             len(vocabulary)
+
         return batch, context
 
     def train(self):
@@ -227,6 +240,7 @@ class Model:
 if __name__ == '__main__':
     select_label = None
     num_words = 10000
+    model_params = {}
     for i, arg in enumerate(sys.argv):
         if arg == "--dataset":
             dataset_file = sys.argv[i+1]
@@ -236,11 +250,17 @@ if __name__ == '__main__':
             select_label = sys.argv[i+1]
         elif arg == "--num-words":
             num_words = int(sys.argv[i+1])
+        elif arg == "--include-stopwords":
+            model_params["skip_stopwords"] = False
+        # Integer parameters for the model
+        elif arg[:2] == "--":
+            param_name = arg[2:]
+            model_params[param_name] = int(sys.argv[i+1])
 
     input = Input(dataset_file, output_name=output_name, select_label=select_label)
     input.read_data()
     input.build_dataset(num_words)
 
-    model = Model(input, output_name=output_name)
+    model = Model(input, output_name=output_name, **model_params)
     model.train()
     model.export_embeddings_vocab()
