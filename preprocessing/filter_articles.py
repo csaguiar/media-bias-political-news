@@ -218,7 +218,7 @@ def include_bias_side(dataset):
         elif domain in conservative_list:
             response = 1
         else:
-            response = None
+            response = -1
 
         return response
 
@@ -226,8 +226,8 @@ def include_bias_side(dataset):
         domain_meta = ALL_SOURCES.get(domain, {})
         return domain_meta.get("level")
 
-    dataset["label"] = dataset["domain"].apply(bias_side)
-    dataset["level"] = dataset["domain"].apply(bias_level)
+    dataset["label"] = dataset["domain"].apply(bias_side).astype(int)
+    dataset["level"] = dataset["domain"].apply(bias_level).astype(int)
 
     return dataset
 

@@ -1,13 +1,14 @@
+'''
+Script for reading raw data from Google News and Webhose
+'''
 import sys
 import json
 from datetime import datetime
 sys.path.append("../../preprocessing")
-sys.path.append("../../word_embeddings/models")
 
 from filter_articles import filter
 from clean_articles import clean_dataset
 from join_files import concat_files
-from train import Input, Model
 
 RAW_DATA_FOLDERS = ["../../data_raw/google_news", "../../data_raw/webhose"]
 
