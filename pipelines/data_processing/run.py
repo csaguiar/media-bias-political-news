@@ -10,6 +10,14 @@ from filter_articles import filter
 from clean_articles import clean_dataset
 from join_files import concat_files
 
+
+# Parsing arguments
+override_date = None
+for i, arg in enumerate(sys.argv):
+    if arg == "--date":
+        override_date = sys.argv[i+1]
+
+
 RAW_DATA_FOLDERS = ["../../data_raw/google_news", "../../data_raw/webhose"]
 
 with open('../../preprocessing/contractions.json', 'r') as contractions_file:
@@ -28,7 +36,11 @@ dataset = (
 )
 
 print("=> SAVING DATA")
-date_today = datetime.now().strftime("%Y_%m_%d")
+if override_date is None:
+    date_today = datetime.now().strftime("%Y_%m_%d")
+else:
+    date_today = override_date
+
 # All data
 filename_all = "webhose_google_news_{}.csv".format(date_today)
 dataset.to_csv("../../data_processed/{}".format(filename_all), index=False)

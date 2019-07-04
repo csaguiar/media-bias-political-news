@@ -134,8 +134,12 @@ def mask_string(dataset):
     return dataset["content"].apply(lambda x: isinstance(x, str))
 
 
-def mask_content_size(dataset, size_threshold=300):
-    return dataset["content"].apply(len) > size_threshold
+def word_count(content):
+    return len(content.split())
+
+
+def mask_content_size(dataset, size_threshold=200):
+    return dataset["content"].apply(word_count) > size_threshold
 
 
 def clean_publication_name(publication):
