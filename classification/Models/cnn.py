@@ -126,7 +126,7 @@ if __name__ == "__main__":
         X, y = process_data(data, dictionary)
         print("=> Training model")
         model_params = {
-            "epochs": 500,
+            "epochs": 50,
             "batch_size": 32
         }
         model, history = train(X, y, embeddings, model_params)
