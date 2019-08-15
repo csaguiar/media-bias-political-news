@@ -2,7 +2,11 @@
 CNN model for bias classification using Tensorflow / Keras
 
 Usage:
-    python cnn.py --dataset <csv file with dataset> --embeddings <pickle file with embeddings>
+    python cnn.py
+        --dataset <csv file with dataset>
+        --embeddings <pickle file with embeddings>
+        --version <version>
+        --name <model name>
 """
 import pickle
 import pandas as pd
@@ -26,8 +30,6 @@ import sys
 import nltk
 nltk.download("stopwords")
 STOPWORDS = nltk.corpus.stopwords.words("english")
-MODEL_NAME = "cnn"
-VERSION = "1.2.0"
 LOGS_FOLDER = "logs"
 
 
@@ -58,7 +60,9 @@ def build_sequence(text, dictionary):
 
 
 def process_data(data, dictionary, length_threshold=1500):
-    data["sequences"] = data["content"].apply(lambda t: build_sequence(t, dictionary))
+    data["sequences"] = data["content"].apply(
+        lambda t: build_sequence(t, dictionary)
+    )
     data["lenghts"] = data["sequences"].apply(lambda s: len(s))
     data = data[data["lenghts"] <= length_threshold]
     max_length = data["lenghts"].max()
