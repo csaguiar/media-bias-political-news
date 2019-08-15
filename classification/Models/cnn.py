@@ -7,7 +7,17 @@ Usage:
 import pickle
 import pandas as pd
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import Dense, Embedding, Conv1D, MaxPooling1D, Flatten, Dropout
+from tensorflow.keras.layers import (
+    Dense,
+    Embedding,
+    Conv1D,
+    MaxPooling1D,
+    Flatten,
+    Dropout,
+    Activation,
+    BatchNormalization
+)
+from tensorflow.keras.regularizers import l1
 from tensorflow.keras.models import Sequential, model_from_json
 from tensorflow.keras.callbacks import TensorBoard
 from sklearn.model_selection import train_test_split
@@ -17,7 +27,7 @@ import nltk
 nltk.download("stopwords")
 STOPWORDS = nltk.corpus.stopwords.words("english")
 MODEL_NAME = "cnn"
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 LOGS_FOLDER = "logs"
 
 
@@ -64,11 +74,7 @@ def create_model(embeddings, model_params):
     max_length = model_params.get("max_length")
     vocab_size = model_params.get("vocab_size")
     embeddings_size = model_params.get("embeddings_size")
-    n_filters_1 = model_params.get("n_filters_1")
-    n_filters_2 = model_params.get("n_filters_2")
-    kernel_size_1 = model_params.get("kernel_size_1")
-    kernel_size_2 = model_params.get("kernel_size_2")
-    print(model_params)
+
     model = Sequential(
         [
             Embedding(
@@ -79,22 +85,18 @@ def create_model(embeddings, model_params):
                 trainable=False
             ),
             Conv1D(
-                filters=n_filters_1,
-                kernel_size=kernel_size_1,
-                activation="relu"
+                filters=16,
+                kernel_size=4,
+                activation="relu",
+                activity_regularizer=l1(0.01),
+                padding="same"
             ),
-            MaxPooling1D(pool_size=3),
-            Conv1D(
-                filters=n_filters_2,
-                kernel_size=kernel_size_2,
-                activation="relu"
-            ),
-            MaxPooling1D(pool_size=3),
+            MaxPooling1D(pool_size=4),
+            BatchNormalization(),
             Flatten(),
-            Dense(
-                10,
-                activation="relu"
-            ),
+            Dense(10),
+            BatchNormalization(),
+            Activation("relu"),
             Dropout(0.5),
             Dense(
                 1,
@@ -123,7 +125,10 @@ def train(X, y, embeddings, model_params, test_size=0.25):
     model = create_model(embeddings, model_params)
 
     # Tensorboard callback
-    base_logdir = "scalars/{}_{}".format(MODEL_NAME, VERSION)
+    base_logdir = "scalars/{}_{}".format(
+        model_params["name"],
+        model_params["version"]
+    )
     logdir = os.path.join(LOGS_FOLDER, base_logdir)
     callback_tensorboard = TensorBoard(log_dir=logdir)
 
@@ -159,11 +164,17 @@ def load_model(model_filename):
 if __name__ == "__main__":
     dataset_file = None
     embedding_file = None
+    model_name = "cnn"
+    model_version = "1.0"
     for i, arg in enumerate(sys.argv):
         if arg == "--dataset":
             dataset_file = sys.argv[i+1]
         elif arg == "--embeddings":
             embedding_file = sys.argv[i+1]
+        elif arg == "--name":
+            model_name = sys.argv[i+1]
+        elif arg == "--version":
+            model_version = sys.argv[i+1]
 
     if (dataset_file is not None) and (embedding_file is not None):
         print("=> Loading Dataset")
@@ -175,12 +186,12 @@ if __name__ == "__main__":
         X, y = process_data(data, dictionary)
         print("=> Training model")
         model_params = {
-            "epochs": 50,
+            "epochs": 30,
             "batch_size": 32,
-            "n_filters_1": 32,
-            "n_filters_2": 32,
+            "n_filters_1": 16,
             "kernel_size_1": 4,
-            "kernel_size_2": 4
+            "version": model_version,
+            "name": model_name
         }
         model, history = train(X, y, embeddings, model_params)
         save_model(model)
