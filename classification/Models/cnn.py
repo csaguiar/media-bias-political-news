@@ -186,10 +186,8 @@ if __name__ == "__main__":
         X, y = process_data(data, dictionary)
         print("=> Training model")
         model_params = {
-            "epochs": 30,
+            "epochs": 500,
             "batch_size": 32,
-            "n_filters_1": 16,
-            "kernel_size_1": 4,
             "version": model_version,
             "name": model_name
         }
