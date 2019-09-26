@@ -203,7 +203,7 @@ def get_callbacks(args):
         logdir = "{}/scalars".format(args.save_log)
         callback_tensorboard = TensorBoard(
             log_dir=get_path(args.job_dir, args.bucket_name, logdir),
-            histogram_freq=1,
+            histogram_freq=2,
             write_grads=True
         )
 

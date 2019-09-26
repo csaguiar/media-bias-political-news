@@ -3,6 +3,7 @@ from keras.layers import (
     Embedding,
     Conv1D,
     MaxPooling1D,
+    GlobalMaxPool1D,
     Flatten,
     Dropout,
     LSTM
@@ -57,11 +58,12 @@ def lstm_model(params):
                 trainable=False
             ),
             LSTM(
-                units=2,
+                units=50,
                 activation="relu",
                 kernel_initializer=VarianceScaling(),
-                return_sequences=False
+                return_sequences=True
             ),
+            GlobalMaxPool1D(),
             Dense(
                 10,
                 activation="relu",
