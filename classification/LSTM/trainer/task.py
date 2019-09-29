@@ -46,13 +46,6 @@ def get_args():
     parser.add_argument(
         '--bucket-name',
         type=str,
-        required=True,
-        help='GCS bucket name'
-    )
-    parser.add_argument(
-        '--data-folder',
-        type=str,
-        required=True,
         help='GCS bucket name'
     )
     parser.add_argument(
@@ -69,7 +62,7 @@ def get_args():
     )
     parser.add_argument(
         "--learning-rate",
-        type=int,
+        type=float,
         default=0.001,
         help="Batch size"
     )
@@ -101,8 +94,8 @@ def get_path(job_dir, bucket_name, path):
         return local_name(path)
 
 
-def source_url(bucket_name, bucket_data_folder, filename):
-    return "gs://{0}/{1}/{2}".format(bucket_name, bucket_data_folder, filename)
+def source_url(bucket_name, filename):
+    return "gs://{0}/{1}".format(bucket_name, filename)
 
 
 def gcp_path(bucket_name, filename):
@@ -124,14 +117,15 @@ def download_file_from_gc(source, destination):
     )
 
 
-def download_files(bucket_name, bucket_data_folder, filenames):
+def download_files(bucket_name, filenames):
     local_files = []
     for filename in filenames:
-        source = source_url(bucket_name, bucket_data_folder, filename)
         local_file = local_name(filename)
 
         if not os.path.exists(local_file):
-            download_file_from_gc(source, local_file)
+            source_file = source_url(bucket_name, filename)
+
+            download_file_from_gc(source_file, local_file)
 
         local_files.append(local_file)
 
@@ -147,18 +141,19 @@ def load_file_from_pickle(filename):
 
 def load_data(args):
     bucket_name = args.bucket_name
-    bucket_data_folder = args.data_folder
+    embedding_file = os.path.join("data", args.embedding_file)
+    dataset_file = os.path.join("data", args.dataset_file)
     filenames = [
-        args.embedding_file,
-        args.dataset_file
+        embedding_file,
+        dataset_file
     ]
 
-    download_files(bucket_name, bucket_data_folder, filenames)
+    download_files(bucket_name, filenames)
 
-    embedding_data = load_file_from_pickle(args.embedding_file)
+    embedding_data = load_file_from_pickle(embedding_file)
     embedding_data["vocab_size"] = len(embedding_data["dictionary"].keys())
     embedding_data["embedding_size"] = embedding_data["embeddings"].shape[1]
-    dataset = pd.read_csv(local_name(args.dataset_file))
+    dataset = pd.read_csv(local_name(dataset_file))
 
     return dataset, embedding_data
 
@@ -199,18 +194,19 @@ def get_callbacks(args):
     callbacks = []
 
     if args.save_log is not None:
+        base_name = args.model_type
         # Tensorboard callback
-        logdir = "{}/scalars".format(args.save_log)
+        logdir = "{}/scalars/{}".format(args.save_log, base_name)
         callback_tensorboard = TensorBoard(
             log_dir=get_path(args.job_dir, args.bucket_name, logdir),
-            histogram_freq=2,
-            write_grads=True
+            histogram_freq=1
         )
 
         callbacks.append(callback_tensorboard)
 
     if args.save_checkpoint:
-        filemodel = "checkpoint-{epoch:04d}-min_loss.hdf5"
+        base_name = args.model_type
+        filemodel = "checkpoint-" + base_name + "-min_loss.hdf5"
         filename = os.path.join(args.job_dir, filemodel)
         callback_checkpoint = ModelCheckpoint(
             filename,
@@ -263,7 +259,7 @@ def train_and_evaluate(X, y, embedding_data, args):
     }
 
     history = model_train.fit(X_train, y_train, **train_params)
-    return
+    return history
 
 
 if __name__ == '__main__':

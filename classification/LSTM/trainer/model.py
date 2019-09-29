@@ -1,5 +1,8 @@
 from keras.layers import (
+    Activation,
     Dense,
+    BatchNormalization,
+    Bidirectional,
     Embedding,
     Conv1D,
     MaxPooling1D,
@@ -28,14 +31,27 @@ def cnn_model(params):
                 input_length=max_length,
                 trainable=False
             ),
-            Conv1D(filters=64, kernel_size=4, activation='relu'),
+            Conv1D(
+                filters=64,
+                kernel_size=4,
+                activation='relu',
+                kernel_initializer=VarianceScaling()
+            ),
             MaxPooling1D(pool_size=3),
-            Conv1D(filters=64, kernel_size=4, activation='relu'),
-            MaxPooling1D(pool_size=3),
-            Flatten(),
-            Dense(10, activation="relu", kernel_initializer='random_normal'),
             Dropout(0.5),
-            Dense(1, activation='sigmoid', kernel_initializer='random_normal')
+            Conv1D(
+                filters=64,
+                kernel_size=4,
+                activation='relu',
+                kernel_initializer=VarianceScaling()
+            ),
+            MaxPooling1D(pool_size=3),
+            Dropout(0.5),
+            Flatten(),
+            Dense(10, activation=None, kernel_initializer=VarianceScaling()),
+            Activation("relu"),
+            Dropout(0.5),
+            Dense(1, activation='sigmoid', kernel_initializer='glorot_normal')
         ]
     )
 
@@ -59,16 +75,53 @@ def lstm_model(params):
             ),
             LSTM(
                 units=50,
-                activation="relu",
-                kernel_initializer=VarianceScaling(),
                 return_sequences=True
             ),
             GlobalMaxPool1D(),
+            Dropout(0.5),
             Dense(
-                10,
-                activation="relu",
-                kernel_initializer=VarianceScaling()
+                50,
+                activation=None
             ),
+            BatchNormalization(),
+            Activation("relu"),
+            Dropout(0.5),
+            Dense(1, activation='sigmoid', kernel_initializer='glorot_normal')
+        ]
+    )
+
+    return model
+
+
+def bi_lstm_model(params):
+    vocab_size = params.get("vocab_size")
+    embedding_size = params.get("embedding_size")
+    embeddings = params.get("embeddings")
+    max_length = params.get("max_length")
+
+    model = Sequential(
+        [
+            Embedding(
+                vocab_size,
+                embedding_size,
+                weights=[embeddings],
+                input_length=max_length,
+                trainable=False
+            ),
+            Bidirectional(
+                LSTM(
+                    units=50,
+                    return_sequences=True
+                ),
+            ),
+            GlobalMaxPool1D(),
+            Dropout(0.5),
+            Dense(
+                50,
+                activation=None
+            ),
+            BatchNormalization(),
+            Activation("relu"),
             Dropout(0.5),
             Dense(1, activation='sigmoid', kernel_initializer='glorot_normal')
         ]
@@ -85,6 +138,8 @@ def keras_model(model_dir, params):
         model = cnn_model(params)
     elif model_type == "lstm":
         model = lstm_model(params)
+    elif model_type == "bi_lstm":
+        model = bi_lstm_model(params)
 
     optimizer = Adam(lr=learning_rate)
 
